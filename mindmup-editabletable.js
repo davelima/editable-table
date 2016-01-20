@@ -1,6 +1,19 @@
 /*global $, window*/
 $.fn.editableTableWidget = function (options) {
 	'use strict';
+
+	if (options == 'appendrow') {
+		var table = $(this),
+			tdCount = table.find('thead tr:first th').length,
+			tr = $('<tr></tr>')
+
+		for (var i = 0; i < tdCount; i ++) {
+			tr.append($('<td></td>').css('height', table.find('td').first().height()));
+		}
+
+		table.find('tbody').append(tr);
+	}
+
 	return $(this).each(function () {
 		var buildDefaultOptions = function () {
 				var opts = $.extend({}, $.fn.editableTableWidget.defaultOptions);
