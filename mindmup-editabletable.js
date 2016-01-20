@@ -70,7 +70,19 @@ $.fn.editableTableWidget = function (options) {
 			setActiveText();
 			editor.hide();
 		}).keydown(function (e) {
-			if (e.which === ENTER) {
+
+			var totalLines = editor.val().match(/\n/g);
+			if (totalLines) {
+				totalLines = totalLines.length;
+				totalLines == 1 ? totalLines += 1 : null;
+				editor.css({
+					'height': totalLines * parseInt(editor.css('line-height')),
+					'white-space': 'pre'
+				});
+			} else {
+				editor.css('height', '');
+			}
+			if (e.which === ENTER && (activeOptions.multilineEditing && e.shiftKey || ! activeOptions.multilineEditing)) {
 				setActiveText();
 				editor.hide();
 				active.focus();
@@ -125,6 +137,12 @@ $.fn.editableTableWidget = function (options) {
 
 		element.find('td').prop('tabindex', 1);
 
+		if (activeOptions.multilineEditing) {
+			element.find('tbody td').css({
+				'white-space': 'pre'
+			});
+		}
+
 		$(window).on('resize', function () {
 			if (editor.is(':visible')) {
 				editor.offset(active.offset())
@@ -139,6 +157,7 @@ $.fn.editableTableWidget.defaultOptions = {
 	cloneProperties: ['padding', 'padding-top', 'padding-bottom', 'padding-left', 'padding-right',
 					  'text-align', 'font', 'font-size', 'font-family', 'font-weight',
 					  'border', 'border-top', 'border-bottom', 'border-left', 'border-right'],
+	multilineEditing: false,
 	editor: $('<input>')
 };
 
